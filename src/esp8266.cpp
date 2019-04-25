@@ -1,19 +1,20 @@
 //
 // Created by development on 01.07.18.
+// Working version uploaded to ESP8266 Development
 //
 
 
 
-#define MYDEBUG
+//#define MYDEBUG
 
 #ifdef MYDEBUG
-    #define DP(x)     Serial.print (x)
+#define DP(x)     Serial.print (x)
     #define DPD(x)     Serial.print (x, DEC)
     #define DPL(x)  Serial.println (x)
 #else
-    #define DP(x)
-    #define DPD(x)
-    #define DPL(x)
+#define DP(x)
+#define DPD(x)
+#define DPL(x)
 #endif
 
 #include "esp8266.h"
@@ -28,7 +29,7 @@
 
 
 const char WiFiSSID[] = "Alice-WLANXP";
-const char WiFiPSK[] = "fabneu7167";
+const char WiFiPSK[] = "xxxxx";
 WiFiClient client1, client2;
 
 IPAddress server(192, 168, 1, 100);
@@ -44,7 +45,7 @@ struct {
 
 
 uint32_t calculateCRC32( const uint8_t *data, size_t length );
-
+// ////////////////////////////// Main Loop, executed after sleep
 void setup()
 {
     pinMode(SW1, INPUT_PULLUP);
@@ -58,15 +59,18 @@ void setup()
     }
 #endif
 
+
     digitalWrite(ESP8266_LED, LOW);
+
+
     DPL("Start");
     delay(100);
     WiFi.disconnect();
-    delay( 10 );
-    WiFi.forceSleepBegin();
-    delay( 10 );
+    delay( 30 );
+    WiFi.forceSleepBegin(); //this sequence is magically needed
+    delay( 50 );
     WiFi.forceSleepWake();
-    delay( 10 );
+    delay( 50 ); //this value must be long enough, otherwise it will not work
 
     // Try to read WiFi settings from RTC memory
 
@@ -106,7 +110,7 @@ void setup()
     }
 
     WiFi.config(
-            IPAddress(192,168,1,31),
+            IPAddress(192,168,1,107),
             IPAddress(192,168,1,1),
             IPAddress(255,255,255,0),
             IPAddress(192,168,1,1));
@@ -182,12 +186,12 @@ void setup()
         DPL("Request sent");
         delay(100);
 
-         } else {
-            DPL("Connection Error Client1  to Openhabian");
-        }
+    } else {
+        DPL("Connection Error Client1  to Openhabian");
+    }
 
 
-if (client2.connect(server, 8080)) {
+    if (client2.connect(server, 8080)) {
 
         if (digitalRead(SW2)) {
             PostData = "ON";
@@ -217,7 +221,7 @@ if (client2.connect(server, 8080)) {
 
 
 
-DPL("End of requests send");
+    DPL("End of requests send");
 
 
     client1.stop();
@@ -228,7 +232,9 @@ DPL("End of requests send");
 }
 
 void loop()
-{}
+{
+
+ }
 
 
 uint32_t calculateCRC32( const uint8_t *data, size_t length ) {
