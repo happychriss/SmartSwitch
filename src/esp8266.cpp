@@ -28,8 +28,8 @@
 #define SW2 13
 
 
-const char WiFiSSID[] = "Alice-WLANXP";
-const char WiFiPSK[] = "xxxxx";
+const char WiFiSSID[] = "xxxx";
+const char WiFiPSK[] = "xxxx";
 WiFiClient client1, client2;
 
 IPAddress server(192, 168, 1, 100);
